@@ -5,4 +5,4 @@ set title "Coupled ODEs"
 set grid
 set xlabel "Time"
 set ylabel "Count"
-plot "data.txt" using 1:2 with lines title "Prey", "data.txt" using 1:3 with lines title "Predator"
+plot "data.txt" using 1:2:5 with yerrorbar title "Prey", "data.txt" using 1:3:4 with xerrorbar title "Predator"

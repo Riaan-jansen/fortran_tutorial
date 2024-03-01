@@ -1,16 +1,28 @@
 ! a runge-kutta
 
-subroutine error(x, y, N)
+subroutine errorbar(x, y, N, xerr, yerr)
     integer, intent(in) :: N
     real, intent(in) :: x(N), y(N)
     real, intent(out) :: xerr(N), yerr(N)
 
+    real, dimension(N, 2) :: rand_x, rand_y
+    integer :: i, j
 
-    
+    call random_number(rand_x)
+    call random_number(rand_y)
+
+    do i = 1, N
+        do j = 1, 2
+            xerr(i) = x(i) * 0.000001 * rand_x(i, j)
+            yerr(i) = y(i) * 0.0001 * rand_y(i, j)
+        end do
+    end do
+end subroutine errorbar
+
 
 program main
     implicit none
-    external error
+    external errorbar
     ! rates of change for the equations
     real, parameter :: A = 0.470
     real, parameter :: B = 0.024
@@ -23,19 +35,23 @@ program main
 
     integer :: i
     real, dimension(2) :: r
-    real, dimension(N) :: t, x, y
+    real, dimension(N) :: t, x, y, xerr, yerr
 
     t = [(H * i, i = 1, N)]
 
+    ! initial values for f1 and f2
     r = [20.0, 5.0]
 
     do i = 1, N
         x(i) = r(1)
         y(i) = r(2)
-
         r = r + rk(t(i), r, H)
-        print '(3(f15.8))', t(i), x(i), y(i)
+    end do
 
+    call errorbar(x, y, N, xerr, yerr)
+
+    do i = 1, N
+        print '(5(f15.8))', t(i), x(i), y(i), xerr(i), yerr(i)
     end do
 
 contains

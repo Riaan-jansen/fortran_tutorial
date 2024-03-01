@@ -1,5 +1,8 @@
 {
     "editor.comments.insertSpace": true,
     "editor.inlineCompletionsAccessibilityVerbose": false,
-    "editor.inlineSuggest.enabled": false
+    "editor.inlineSuggest.enabled": false,
+    "fortran.fortls.disabled": true,
+    "editor.acceptSuggestionOnCommitCharacter": false,
+    "editor.quickSuggestions": { "other": false, "comments": false, "strings": false }
 }
