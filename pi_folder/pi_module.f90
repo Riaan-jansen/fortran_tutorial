@@ -14,7 +14,7 @@ CONTAINS
 
         INTEGER :: i
 
-        CALL random_number(rand)
+        CALL random_number(rand)  ! floats from interval [0,1]
 
         inpins = 0
 
@@ -28,13 +28,27 @@ CONTAINS
 
     END FUNCTION pin_dropper
 
-    REAL FUNCTION pi_calculator(inpins, n) result(pi_guess)
+    REAL FUNCTION pi_calculator(n, inpins) result(pi_guess)
 
         INTEGER, INTENT(IN) :: n, inpins
 
         pi_guess = 4 * real(inpins) / real(n)  ! factor of 4 for quadrant
 
     END FUNCTION pi_calculator
+
+    SUBROUTINE pi_print(p_start, p_max, r)
+        INTEGER, INTENT(IN) :: p_start, p_max
+        REAL, INTENT(IN) :: r
+        INTEGER :: inpins, i, n
+        REAL :: pi
+
+        DO i = p_start, p_max
+            n = 1000000*(i)
+            inpins = pin_dropper(n, r)
+            pi = pi_calculator(n, inpins)
+            print *, n, pi
+        END DO
+    END SUBROUTINE pi_print
 
 END MODULE pi_finder
 
@@ -44,13 +58,18 @@ PROGRAM main
 
     IMPLICIT NONE
 
-    INTEGER, PARAMETER :: n = 1000000
-    REAL, PARAMETER :: r = 1
-    REAL :: pi
-    INTEGER :: inpins
+    REAL, PARAMETER :: r = 1.0
+    INTEGER, PARAMETER :: power = 1, power_max = 15
+    INTEGER :: t0, t1, cr
+    REAL :: rate
 
-    inpins = pin_dropper(n, r)
-    pi = pi_calculator(inpins, n)
-    PRINT *, '--- pi =', pi, '---'
+    CALL SYSTEM_CLOCK(count_rate=cr)
+    rate = real(cr)
+
+    CALL SYSTEM_CLOCK(t0)
+    CALL pi_print(power, power_max, r)
+    CALL SYSTEM_CLOCK(t1)
+
+    print *, "clock =", (t1 - t0) / rate
 
 END PROGRAM main

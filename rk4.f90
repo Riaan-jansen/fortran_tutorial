@@ -1,4 +1,5 @@
 ! a runge-kutta
+! credit : https://cyber.dabamos.de/programming/modernfortran/gnuplot.html
 
 subroutine errorbar(x, y, N, xerr, yerr)
     integer, intent(in) :: N
