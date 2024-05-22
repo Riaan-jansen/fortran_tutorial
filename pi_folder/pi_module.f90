@@ -1,75 +1,81 @@
-MODULE pi_finder
+module pi_finder
 
-    IMPLICIT NONE
+    use, intrinsic :: iso_fortran_env, only: sp=>real32, dp=>real64
+    implicit none
 
-CONTAINS
+contains
 
-    INTEGER FUNCTION pin_dropper(n, radius) result(inpins)
+    real(dp) function pin_dropper(n, radius) result(inpins)
 
-        INTEGER, INTENT(IN) :: n
-        REAL, INTENT(IN) :: radius
+        real(dp), intent(in) :: n
+        real(dp), intent(in) :: radius
 
-        REAL, DIMENSION(n, 2) :: rand  ! not necessary but shows MxN matrix...
-        REAL, DIMENSION(n) :: x, y     ! ... in fact probably slower
+        integer :: trials
+        real(dp) :: x, y
 
-        INTEGER :: i
+        integer :: i
 
-        CALL random_number(rand)  ! floats from interval [0,1]
-
-        inpins = 0
-
-        DO i = 1, n
-            x(i) = rand(i, 1) * radius
-            y(i) = rand(i, 2) * radius
-            IF (x(i)**2 + y(i)**2 <= radius**2) THEN
+        inpins = 0.0
+        trials = INT(n)
+        do i = 1, trials
+            call random_number(x)
+            call random_number(y)
+            if (x**2 + y**2 <= radius**2) then
                 inpins = inpins + 1.0
-            END IF
-        END DO
+            end if
+        end do
 
-    END FUNCTION pin_dropper
+    end function pin_dropper
 
-    REAL FUNCTION pi_calculator(n, inpins) result(pi_guess)
+    real(dp) function pi_calculator(n, inpins) result(pi_guess)
 
-        INTEGER, INTENT(IN) :: n, inpins
+        real(dp), intent(in) :: n, inpins
 
-        pi_guess = 4 * real(inpins) / real(n)  ! factor of 4 for quadrant
+        real(dp) :: No, PINS
 
-    END FUNCTION pi_calculator
+        No = real(n)
+        PINS = real(inpins)
 
-    SUBROUTINE pi_print(p_start, p_max, r)
-        INTEGER, INTENT(IN) :: p_start, p_max
-        REAL, INTENT(IN) :: r
-        INTEGER :: inpins, i, n
-        REAL :: pi
+        pi_guess = 4 * PINS / No  ! factor of 4 for quadrant
 
-        DO i = p_start, p_max
-            n = 1000000*(i)
+    end function pi_calculator
+
+    subroutine pi_print(p_start, p_max, r)
+        integer, intent(in) :: p_start, p_max
+        real(dp), intent(in) :: r
+        real(dp), parameter :: real_pi = 3.14159265359
+        integer :: i
+        real(dp) :: inpins, n, pi
+
+        do i = p_start, p_max
+            n = 100000.0*(i)
             inpins = pin_dropper(n, r)
             pi = pi_calculator(n, inpins)
             print *, n, pi
-        END DO
-    END SUBROUTINE pi_print
+        end do
+    end subroutine pi_print
 
-END MODULE pi_finder
+end module pi_finder
 
-PROGRAM main
+program main
 
-    USE pi_finder
+    use pi_finder
+    use, intrinsic :: iso_fortran_env, only: sp=>real32, dp=>real64
 
-    IMPLICIT NONE
+    implicit none
 
-    REAL, PARAMETER :: r = 1.0
-    INTEGER, PARAMETER :: power = 1, power_max = 15
-    INTEGER :: t0, t1, cr
-    REAL :: rate
+    real(dp), parameter :: r = 1.0
+    integer, parameter :: power = 1, power_max = 40
+    integer :: t0, t1, cr
+    real :: rate
 
-    CALL SYSTEM_CLOCK(count_rate=cr)
+    call system_clock(count_rate=cr)
     rate = real(cr)
 
-    CALL SYSTEM_CLOCK(t0)
-    CALL pi_print(power, power_max, r)
-    CALL SYSTEM_CLOCK(t1)
+    call system_clock(t0)
+    call pi_print(power, power_max, r)
+    call system_clock(t1)
 
     print *, "clock =", (t1 - t0) / rate
 
-END PROGRAM main
+end program main

@@ -1,47 +1,43 @@
-program main
-    implicit none
+PROGRAM MAIN
 
-    type :: tuple
-        real :: xc, yc
-    end type
+    USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: SP=>REAL32, DP=>REAL64
+    IMPLICIT NONE
 
-    real, parameter :: R = 1.0
-    integer, parameter :: N = 10000000
-    real :: pin, pi
-    ! real*8 :: pi
-    integer :: ins
+    REAL, PARAMETER :: R = 1.0
+    INTEGER, PARAMETER :: N = 100000000
+    REAL :: PIN, PI
+    ! REAL*8 :: PI
+    INTEGER :: INS
 
-    real, dimension(N) :: rand_x, rand_y
-    ! real, dimension(N) :: pin_x, pin_y
-    ! type(tuple), allocatable :: in(:), out(:)
+    REAL, DIMENSION(N) :: RAND_X, RAND_Y
 
-    integer :: i
+    INTEGER :: I
 
-    call random_number(rand_x)
-    call random_number(rand_y)
+    CALL RANDOM_NUMBER(RAND_X)
+    CALL RANDOM_NUMBER(RAND_Y)
 
-    ins = 0
-    do i = 1, N
-        pin = rand_x(i)**2 + rand_y(i)**2
-        if (pin <= 1) then
-            ins = ins + 1 
-        end if
-    end do
+    INS = 0
+    DO I = 1, N
+        PIN = RAND_X(I)**2 + RAND_Y(I)**2
+        IF (PIN <= 1) THEN
+            INS = INS + 1 
+        END IF
+    END DO
 
-    pi = piCalc(ins, N)
-    print *, 'pi =', pi
+    PI = PICALC(INS, N)
+    PRINT *, 'PI =', PI
 
-contains
-    pure function piCalc(ins, trials) result(retval)
-        integer, intent(in) :: ins, trials
-        real :: retval, ratio
-        real :: in_r, n_r
+CONTAINS
+    PURE FUNCTION PICALC(INPINS, TRIALS) RESULT(RETVAL)
+        INTEGER, INTENT(IN) :: INPINS, TRIALS
+        REAL :: RETVAL, RATIO
+        REAL :: IN_R, N_R
 
-        n_r = real(trials)
-        in_r = real(ins)
-        ratio = in_r / n_r
-        retval = 4 * ratio
+        N_R = REAL(TRIALS)
+        IN_R = REAL(INPINS)
+        RATIO = IN_R / N_R
+        RETVAL = 4 * RATIO
 
-    end function piCalc
+    END FUNCTION PICALC
 
-end program
+END PROGRAM
