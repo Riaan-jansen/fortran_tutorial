@@ -26,13 +26,13 @@ c prints outcome of both
 
         ! specific heat capacity [J/g.C]
         double precision, parameter :: c_base = 0.385
-        double precision, parameter :: c_tar = 3.58
+        double precision, parameter :: c_tar = 3.49
         double precision, parameter :: c_cool = 4.2
 
         ! mass [g], density [g/m3] * volume [m3]
-        double precision, parameter :: m_base = 8.96D6 * len_base * area ! = 2.5E-2
-        double precision, parameter :: m_tar = 5.34D6 * len_tar * area ! = 4.5E-7
-        double precision, parameter :: m_cool = 1D6 * len_cool * area ! = 2.8E-5
+        double precision, parameter :: m_base = 8.96D6 * len_base * area ! = 2.5E4
+        double precision, parameter :: m_tar = 5.34D5 * len_tar * area ! = 0.453
+        double precision, parameter :: m_cool = 1D6 * len_cool * area ! = 
 
         ! mc coefficients
         double precision, parameter :: mc_base = m_base * c_base ! = 97.4
@@ -52,7 +52,7 @@ c prints outcome of both
         double precision, parameter :: beta = k_tar * area_tar 
      &   / len_tar  ! beta = 669
         double precision, parameter :: gamma = k_cool * area_cool 
-     &   / len_cool * 100000 ! gamma = 1.69E-3 * some value to flow
+     &   / len_cool * 1e6 ! gamma = 1.69E-3 * some value to flow
 
       end module variables
 
@@ -61,14 +61,14 @@ c prints outcome of both
         implicit none
 
         ! step sizing
-        double precision, parameter :: h = 0.001
-        double precision, parameter :: n_max = 120.0
-        integer, parameter :: n = int(n_max / h)
+        double precision, parameter :: h = 0.0001      ! step size
+        double precision, parameter :: n_max = 120.0  ! time max
+        integer, parameter :: n = int(n_max / h)      ! number of steps
         double precision, dimension(3) :: T
 
 c 1002  format (4(A13,2x))
 
-        T = [T_tar,T_base,T_cool]
+        ! T = [T_tar,T_base,T_cool]
 
         ! write (*,1002) "time (s)", "target (C)", "base  ", "coolant"
         ! print *, "--------------------------RK4----------------------"

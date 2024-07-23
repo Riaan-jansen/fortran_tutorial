@@ -6,6 +6,8 @@ set nokey
 set grid
 set xlabel "number of trials"
 set ylabel "pi value"
+set logscale x 10
+
 m = "pi.txt"
 real_pi = 3.14159265359
 plot m using 1:2 with points title "Pi estimations"
